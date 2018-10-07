@@ -29,11 +29,10 @@ def parseQuizlet(htmlContent):
     lst = soup.findAll("div", {"class":"SetPage-term"})     #all flashcards (has question answer in it)
     
     for card in lst:
-        question = str(card.findChildren("span", {"class":"TermText"}, recursive=True))
-        questions_answers.append(question)
+        question = card.findChildren("span", {"class":"TermText"}, recursive=True)
+        questions_answers.append([question[0].contents[0], question[1].contents[0]])
 
     return questions_answers
-    
 
 
 def getAnswer(question):
