@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 """
 def googlesearch(searchfor, api_key, search_id):
     link = 'https://www.googleapis.com/customsearch/v1'
-    payload = {'key': api_key, 'cx': search_id, 'q': searchfor}
+    payload = {'key': api_key, 'cx': search_id, 'q': searchfor, 'num': 2}
     response = requests.get(link, params=payload)
     return response.text
 
@@ -34,21 +34,43 @@ def parseQuizlet(htmlContent):
 
     return questions_answers
 
-def getAnswer(question):
-    result = googlesearch(question, api, search_id)
-    json_obj = json.loads(result)
-    link = json_obj["items"][0]["link"]
-    all_pairs = parseQuizlet(getWebsiteContent(link))
 
-    for i in all_pairs:
-        if i[0] == question:
-            return i[1]
-        elif i[1] == question:
-            return i[2]
+def getMatch(string1, string2):
+    totalMatch = 0
+
+    str1 = string1.split(" ")
+    str2 = string2.split(" ")
     
-    return "None"
+    for i in str1:
+        if i in str2:
+            totalMatch += 1
+    return totalMatch / len(str1)
+
+
+def getAnswer(question, option=0):
+    result = googlesearch(question, api, id)
+    json_obj = json.loads(result)
+
+    for item in json_obj["items"]:
+        link = item["link"]
+        all_pairs = parseQuizlet(getWebsiteContent(link))
+
+        bestMatch = 0
+        bestAnswer = "None"
+
+        for i in all_pairs:
+            #if i[0] == question:
+                #return i[1]
+            temp = getMatch(question, i[option])
+            if temp > bestMatch:
+                bestMatch = temp
+                bestAnswer = i[1 - option]
+    
+    print("Match: " + str(bestMatch))
+    return bestAnswer
 
 
 assert len(sys.argv) != 1, "Enter a question"
 question = ' '.join(sys.argv[1:])
 print(getAnswer(question))
+print(getAnswer(question, option=1))
