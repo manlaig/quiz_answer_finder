@@ -34,8 +34,6 @@ def parseQuizlet(htmlContent):
 
     return questions_answers
 
-#'AIzaSyD7Q20Ts390Ptp-A_y_2EFtESskF4VlPaE'
-#'013798571177656250136:r5mvmy6bpdo'
 def getAnswer(question):
     result = googlesearch(question, api, search_id)
     json_obj = json.loads(result)
