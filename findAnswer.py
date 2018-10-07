@@ -1,4 +1,4 @@
-import requests, json
+import requests, json, sys
 from bs4 import BeautifulSoup
 
 
@@ -36,13 +36,20 @@ def parseQuizlet(htmlContent):
 
 
 def getAnswer(question):
-    result = googlesearch('quizlet', 'AIzaSyD7Q20Ts390Ptp-A_y_2EFtESskF4VlPaE', '013798571177656250136:r5mvmy6bpdo')
+    result = googlesearch(question, 'AIzaSyD7Q20Ts390Ptp-A_y_2EFtESskF4VlPaE', '013798571177656250136:r5mvmy6bpdo')
     json_obj = json.loads(result)
-    for i in json_obj["items"]:
-        print(i["link"])
+    link = json_obj["items"][0]["link"]
+    all_pairs = parseQuizlet(getWebsiteContent(link))
+
+    for i in all_pairs:
+        if i[0] == question:
+            return i[1]
+        elif i[1] == question:
+            return i[2]
+    
+    return "None"
 
 
-all_pairs = parseQuizlet(getWebsiteContent("https://quizlet.com/122037001/chapter-5-understanding-quiz-flash-cards/"))
-
-for item in all_pairs:
-    print(item)
+assert len(sys.argv) != 1, "Enter a question"
+question = ' '.join(sys.argv[1:])
+print(getAnswer(question))
