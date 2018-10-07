@@ -34,9 +34,10 @@ def parseQuizlet(htmlContent):
 
     return questions_answers
 
-
+#'AIzaSyD7Q20Ts390Ptp-A_y_2EFtESskF4VlPaE'
+#'013798571177656250136:r5mvmy6bpdo'
 def getAnswer(question):
-    result = googlesearch(question, 'AIzaSyD7Q20Ts390Ptp-A_y_2EFtESskF4VlPaE', '013798571177656250136:r5mvmy6bpdo')
+    result = googlesearch(question, api, search_id)
     json_obj = json.loads(result)
     link = json_obj["items"][0]["link"]
     all_pairs = parseQuizlet(getWebsiteContent(link))
