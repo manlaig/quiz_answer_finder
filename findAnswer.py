@@ -20,7 +20,7 @@ def parseQuizlet(htmlContent):
     soup = BeautifulSoup(htmlContent, "html.parser")
 
     """ each flashcard has question and answer in it """
-    all_flashcards = soup.findAll("div", {"class":"SetPage-term"})
+    all_flashcards = soup.findAll("div", {"class":"SetPageTerms-term"})
     
     for card in all_flashcards:
         question = card.findChildren("span", {"class":"TermText"}, recursive=True)
@@ -50,7 +50,7 @@ def getMatch(string1, string2):
 """
 def getAnswer(question, option=0):
     result = googlesearch(question,
-                    api_key=api_key,
+                    api_key=key
                     search_id='013798571177656250136:r5mvmy6bpdo')
     json_obj = json.loads(result)
 
@@ -73,7 +73,7 @@ def getAnswer(question, option=0):
                 bestAnswer = i[1 - option]
                 
                 """ 90% match, so most likely the correct answer """
-                if(temp > 90):
+                if(temp > 80):
                     return (bestAnswer, bestMatch)
 
     return (bestAnswer, bestMatch)
